@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import com.arctouch.codechallenge.R
+import com.arctouch.codechallenge.common.AppConstants
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -13,6 +14,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
+            title = intent.getStringExtra(AppConstants.EXTRA_TITLE)
         }
     }
 

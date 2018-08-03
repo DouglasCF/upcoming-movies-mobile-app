@@ -11,7 +11,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.movie_item.view.*
 
-class HomeAdapter(private val movies: List<Movie>) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeAdapter(private val movies: List<Movie>, private val listener: OnHomeListener) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+
+    interface OnHomeListener {
+        fun onClick(movie: Movie)
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -23,9 +27,9 @@ class HomeAdapter(private val movies: List<Movie>) : RecyclerView.Adapter<HomeAd
             itemView.releaseDateTextView.text = movie.releaseDate
 
             Glide.with(itemView)
-                .load(movie.posterPath?.let { movieImageUrlBuilder.buildPosterUrl(it) })
-                .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
-                .into(itemView.posterImageView)
+                    .load(movie.posterPath?.let { movieImageUrlBuilder.buildPosterUrl(it) })
+                    .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
+                    .into(itemView.posterImageView)
         }
     }
 
@@ -36,5 +40,9 @@ class HomeAdapter(private val movies: List<Movie>) : RecyclerView.Adapter<HomeAd
 
     override fun getItemCount() = movies.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(movies[position])
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val movie = movies[position]
+        holder.bind(movie)
+        holder.itemView.setOnClickListener { listener.onClick(movie) }
+    }
 }
