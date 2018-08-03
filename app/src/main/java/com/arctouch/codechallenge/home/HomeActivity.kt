@@ -35,6 +35,7 @@ class HomeActivity : BaseActivity(), HomeAdapter.OnHomeListener {
     override fun onClick(movie: Movie) {
         val intent = Intent(this, MovieDetailActivity::class.java)
         intent.putExtra(AppConstants.EXTRA_TITLE, movie.title)
+        intent.putExtra(AppConstants.EXTRA_ID, movie.id)
         startActivity(intent)
     }
 }
