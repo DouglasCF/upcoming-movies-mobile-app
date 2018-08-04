@@ -8,8 +8,12 @@ import com.arctouch.codechallenge.data.remote.MovieRepository
 class MovieDetailViewModel : ViewModel() {
 
     private val movieRepository = MovieRepository()
+    private var liveData: LiveData<Movie>? = null
 
     fun getMovie(id: Long): LiveData<Movie> {
-        return movieRepository.getMovie(id)
+        if (liveData == null) {
+            liveData = movieRepository.getMovie(id)
+        }
+        return liveData!!
     }
 }
