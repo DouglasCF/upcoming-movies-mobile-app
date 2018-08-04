@@ -11,11 +11,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.movie_item.view.*
 
-class HomeAdapter(private val movies: List<Movie>, private val listener: OnHomeListener) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
     interface OnHomeListener {
         fun onClick(movie: Movie)
     }
+
+    private val movies = mutableListOf<Movie>()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -42,5 +44,11 @@ class HomeAdapter(private val movies: List<Movie>, private val listener: OnHomeL
         val movie = movies[position]
         holder.bind(movie)
         holder.itemView.setOnClickListener { listener.onClick(movie) }
+    }
+
+    fun setData(data: List<Movie>) {
+        movies.clear()
+        movies.addAll(data)
+        notifyDataSetChanged()
     }
 }
