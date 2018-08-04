@@ -51,6 +51,12 @@ class HomeActivity : BaseActivity(), HomeAdapter.OnHomeListener {
 
     private fun setupViewModel() {
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        viewModel.getGenres().observe(this, Observer {
+            observeMovies()
+        })
+    }
+
+    private fun observeMovies() {
         viewModel.getMovies().observe(this, Observer {
             progressBar.visibility = View.GONE
             viewAdapter.setData(it!!)
