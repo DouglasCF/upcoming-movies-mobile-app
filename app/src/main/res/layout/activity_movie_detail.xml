@@ -14,124 +14,136 @@
             type="com.arctouch.codechallenge.model.Movie" />
     </data>
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context=".view.moviedetail.MovieDetailActivity">
+            app:showVisible="@{movie != null}"
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/backdropImage"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/colorPrimary"
-                android:contentDescription="@string/content_description_backdrop"
-                app:centerCrop="@{true}"
-                app:imageUrl="@{MovieImageUrlBuilder.buildBackdropUrl(movie.backdropPath)}"
-                app:placeholder="@{null}" />
-
-            <ImageView
-                android:id="@+id/posterImage"
-                android:layout_width="80dp"
-                android:layout_height="120dp"
-                android:background="@drawable/border_background"
-                android:contentDescription="@string/content_description_poster"
-                app:centerCrop="@{true}"
-                app:imageUrl="@{MovieImageUrlBuilder.buildPosterUrl(movie.posterPath)}"
-                app:layout_constraintBottom_toBottomOf="@id/backdropImage"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:placeholder="@{@drawable/ic_image_placeholder}" />
-
-            <android.support.v7.widget.CardView
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin"
-                app:cardUseCompatPadding="true"
-                app:contentPadding="@dimen/default_padding"
-                app:layout_constraintTop_toBottomOf="@id/backdropImage">
+                tools:context=".view.moviedetail.MovieDetailActivity">
 
-                <android.support.constraint.ConstraintLayout
+                <ImageView
+                    android:id="@+id/backdropImage"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="200dp"
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="@string/content_description_backdrop"
+                    app:centerCrop="@{true}"
+                    app:imageUrl="@{MovieImageUrlBuilder.buildBackdropUrl(movie.backdropPath)}"
+                    app:placeholder="@{null}" />
 
-                    <TextView
-                        android:id="@+id/genreTitleText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/genre"
-                        android:textStyle="bold"
-                        android:visibility="@{movie.allGenre.length() > 0 ? View.VISIBLE : View.GONE}" />
+                <ImageView
+                    android:id="@+id/posterImage"
+                    android:layout_width="80dp"
+                    android:layout_height="120dp"
+                    android:background="@drawable/border_background"
+                    android:contentDescription="@string/content_description_poster"
+                    app:centerCrop="@{true}"
+                    app:imageUrl="@{MovieImageUrlBuilder.buildPosterUrl(movie.posterPath)}"
+                    app:layout_constraintBottom_toBottomOf="@id/backdropImage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:placeholder="@{@drawable/ic_image_placeholder}" />
 
-                    <TextView
-                        android:id="@+id/genreText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_margin"
-                        android:text="@{movie.allGenre}"
-                        android:visibility="@{movie.allGenre.length() > 0 ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/genreTitleText"
-                        tools:text="Science Fiction | Thriller" />
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin"
+                    app:cardUseCompatPadding="true"
+                    app:contentPadding="@dimen/default_padding"
+                    app:layout_constraintTop_toBottomOf="@id/backdropImage">
 
-                    <View
-                        android:id="@+id/genreDivider"
+                    <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="@dimen/default_margin"
-                        android:background="#DDD"
-                        android:visibility="@{movie.allGenre.length() > 0 ? View.VISIBLE : View.GONE}"
-                        app:layout_constraintTop_toBottomOf="@id/genreText" />
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/releaseDateTitleText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/default_margin"
-                        android:text="@string/release_date"
-                        android:textStyle="bold"
-                        app:layout_constraintTop_toBottomOf="@id/genreDivider" />
+                        <TextView
+                            android:id="@+id/genreTitleText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/genre"
+                            android:textStyle="bold"
+                            android:visibility="@{movie.allGenre.length() > 0 ? View.VISIBLE : View.GONE}" />
 
-                    <TextView
-                        android:id="@+id/releaseDateText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_margin"
-                        android:text="@{movie.releaseDate}"
-                        app:layout_constraintTop_toBottomOf="@id/releaseDateTitleText"
-                        tools:text="2018-08-02" />
+                        <TextView
+                            android:id="@+id/genreText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_margin"
+                            android:text="@{movie.allGenre}"
+                            android:visibility="@{movie.allGenre.length() > 0 ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintTop_toBottomOf="@id/genreTitleText"
+                            tools:text="Science Fiction | Thriller" />
 
-                    <View
-                        android:id="@+id/releaseDateDivider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="@dimen/default_margin"
-                        android:background="#DDD"
-                        app:layout_constraintTop_toBottomOf="@id/releaseDateText" />
+                        <View
+                            android:id="@+id/genreDivider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/default_margin"
+                            android:background="#DDD"
+                            android:visibility="@{movie.allGenre.length() > 0 ? View.VISIBLE : View.GONE}"
+                            app:layout_constraintTop_toBottomOf="@id/genreText" />
 
-                    <TextView
-                        android:id="@+id/overviewTitleText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/default_margin"
-                        android:text="@string/overview"
-                        android:textStyle="bold"
-                        app:layout_constraintTop_toBottomOf="@id/releaseDateDivider" />
+                        <TextView
+                            android:id="@+id/releaseDateTitleText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/default_margin"
+                            android:text="@string/release_date"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toBottomOf="@id/genreDivider" />
 
-                    <TextView
-                        android:id="@+id/overviewText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_margin"
-                        android:text="@{movie.overview}"
-                        app:layout_constraintTop_toBottomOf="@id/overviewTitleText"
-                        tools:text="After a disease kills 98% of America's children, the surviving 2% develop superpowers and are placed in internment camps. A 16-year-old girl escapes her camp and joins a group of other teens on the run from the government" />
-                </android.support.constraint.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/releaseDateText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_margin"
+                            android:text="@{movie.releaseDate}"
+                            app:layout_constraintTop_toBottomOf="@id/releaseDateTitleText"
+                            tools:text="2018-08-02" />
 
-            </android.support.v7.widget.CardView>
+                        <View
+                            android:id="@+id/releaseDateDivider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/default_margin"
+                            android:background="#DDD"
+                            app:layout_constraintTop_toBottomOf="@id/releaseDateText" />
 
-        </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+                        <TextView
+                            android:id="@+id/overviewTitleText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/default_margin"
+                            android:text="@string/overview"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toBottomOf="@id/releaseDateDivider" />
+
+                        <TextView
+                            android:id="@+id/overviewText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_margin"
+                            android:text="@{movie.overview}"
+                            app:layout_constraintTop_toBottomOf="@id/overviewTitleText"
+                            tools:text="After a disease kills 98% of America's children, the surviving 2% develop superpowers and are placed in internment camps. A 16-year-old girl escapes her camp and joins a group of other teens on the run from the government" />
+                    </android.support.constraint.ConstraintLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </android.support.constraint.ConstraintLayout>
+        </ScrollView>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:showVisible="@{movie == null}" />
+    </FrameLayout>
 </layout>
