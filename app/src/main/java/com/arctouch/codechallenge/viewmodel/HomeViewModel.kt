@@ -8,8 +8,12 @@ import com.arctouch.codechallenge.model.Movie
 class HomeViewModel : ViewModel() {
 
     private val movieRepository = MovieRepository()
+    private var page = 0L
 
-    fun getMovies(page: Long): LiveData<List<Movie>> {
-        return movieRepository.getMovies(page)
+    lateinit var liveData: LiveData<List<Movie>>
+
+    fun getMovies(): LiveData<List<Movie>> {
+        liveData = movieRepository.getMovies(++page)
+        return liveData
     }
 }

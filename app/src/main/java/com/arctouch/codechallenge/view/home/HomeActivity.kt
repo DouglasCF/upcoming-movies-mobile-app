@@ -11,25 +11,34 @@ import com.arctouch.codechallenge.R
 import com.arctouch.codechallenge.base.BaseActivity
 import com.arctouch.codechallenge.common.AppConstants
 import com.arctouch.codechallenge.model.Movie
+import com.arctouch.codechallenge.view.common.EndlessScrollListener
 import com.arctouch.codechallenge.view.moviedetail.MovieDetailActivity
 import com.arctouch.codechallenge.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.home_activity.*
 
 class HomeActivity : BaseActivity(), HomeAdapter.OnHomeListener {
 
+    private lateinit var viewModel: HomeViewModel
     private lateinit var viewAdapter: HomeAdapter
+    private val scrollListener = object : EndlessScrollListener() {
+        override fun loadMore() {
+            viewModel.getMovies().observe(this@HomeActivity, Observer {
+                viewAdapter.addData(it!!)
+            })
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
 
         setupRecyclerView()
+        setupViewModel()
+    }
 
-        val viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        viewModel.getMovies(1).observe(this, Observer {
-            progressBar.visibility = View.GONE
-            viewAdapter.setData(it!!)
-        })
+    override fun onDestroy() {
+        recyclerView.removeOnScrollListener(scrollListener)
+        super.onDestroy()
     }
 
     private fun setupRecyclerView() {
@@ -37,7 +46,16 @@ class HomeActivity : BaseActivity(), HomeAdapter.OnHomeListener {
         recyclerView.apply {
             addItemDecoration(DividerItemDecoration(this@HomeActivity, LinearLayoutManager.VERTICAL))
             adapter = viewAdapter
+            addOnScrollListener(scrollListener)
         }
+    }
+
+    private fun setupViewModel() {
+        viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        viewModel.getMovies().observe(this, Observer {
+            progressBar.visibility = View.GONE
+            viewAdapter.setData(it!!)
+        })
     }
 
     override fun onClick(movie: Movie) {

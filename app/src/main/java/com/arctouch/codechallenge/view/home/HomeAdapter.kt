@@ -38,4 +38,9 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<H
         movies.addAll(data)
         notifyDataSetChanged()
     }
+
+    fun addData(data: List<Movie>) {
+        movies.addAll(data)
+        notifyDataSetChanged()
+    }
 }
