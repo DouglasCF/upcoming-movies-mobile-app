@@ -2,14 +2,9 @@ package com.arctouch.codechallenge.view.home
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import com.arctouch.codechallenge.R
+import com.arctouch.codechallenge.databinding.MovieItemBinding
 import com.arctouch.codechallenge.model.Movie
-import com.arctouch.codechallenge.util.MovieImageUrlBuilder
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import kotlinx.android.synthetic.main.movie_item.view.*
 
 class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
@@ -19,32 +14,24 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<H
 
     private val movies = mutableListOf<Movie>()
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(movie: Movie) {
-            itemView.titleText.text = movie.title
-            itemView.genresText.text = movie.genres?.joinToString(separator = ", ") { it.name }
-            itemView.releaseDateTextView.text = movie.releaseDate
+        fun bind(movie: Movie, listener: OnHomeListener) {
+            binding.movie = movie
+            binding.executePendingBindings()
 
-            Glide.with(itemView)
-                    .load(movie.posterPath?.let { MovieImageUrlBuilder.buildPosterUrl(it) })
-                    .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
-                    .into(itemView.posterImage)
+            itemView.setOnClickListener { listener.onClick(movie) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false)
-        return ViewHolder(view)
+        val binding = MovieItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount() = movies.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie = movies[position]
-        holder.bind(movie)
-        holder.itemView.setOnClickListener { listener.onClick(movie) }
-    }
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.bind(movies[position], listener)
 
     fun setData(data: List<Movie>) {
         movies.clear()

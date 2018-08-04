@@ -77,7 +77,7 @@
                             android:text="@{movie.allGenre}"
                             app:layout_constraintTop_toBottomOf="@id/genreTitleText"
                             app:showVisible="@{movie.allGenre.length() > 0}"
-                            tools:text="Science Fiction | Thriller" />
+                            tools:text="Science Fiction, Thriller" />
 
                         <View
                             android:id="@+id/genreDivider"
