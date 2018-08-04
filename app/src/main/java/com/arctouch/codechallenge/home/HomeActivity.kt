@@ -20,16 +20,16 @@ class HomeActivity : BaseActivity(), HomeAdapter.OnHomeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
 
-        api.upcomingMovies(TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE, 1, TmdbApi.DEFAULT_REGION)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    val moviesWithGenres = it.results.map { movie ->
-                        movie.copy(genres = Cache.genres.filter { movie.genreIds?.contains(it.id) == true })
-                    }
-                    recyclerView.adapter = HomeAdapter(moviesWithGenres, this)
-                    progressBar.visibility = View.GONE
-                }
+//        api.upcomingMovies(TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE, 1, TmdbApi.DEFAULT_REGION)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe {
+//                    val moviesWithGenres = it.results.map { movie ->
+//                        movie.copy(genres = Cache.genres.filter { movie.genreIds?.contains(it.id) == true })
+//                    }
+//                    recyclerView.adapter = HomeAdapter(moviesWithGenres, this)
+//                    progressBar.visibility = View.GONE
+//                }
     }
 
     override fun onClick(movie: Movie) {
