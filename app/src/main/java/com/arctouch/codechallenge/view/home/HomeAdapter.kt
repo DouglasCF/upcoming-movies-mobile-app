@@ -12,6 +12,8 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<R
 
     interface OnHomeListener {
         fun onClick(movie: Movie)
+        fun showEmptyFilter()
+        fun removeEmptyFilter()
     }
 
     companion object {
@@ -74,6 +76,12 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<R
             movies.addAll(allMovies)
         } else {
             movies.addAll(allMovies.filter { it?.title?.toLowerCase()?.contains(newText?.toLowerCase()!!)!! })
+        }
+
+        if (movies.isEmpty()) {
+            listener.showEmptyFilter()
+        } else {
+            listener.removeEmptyFilter()
         }
         notifyDataSetChanged()
     }

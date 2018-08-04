@@ -24,10 +24,14 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
     private lateinit var viewAdapter: HomeAdapter
     private val scrollListener = object : EndlessScrollListener() {
         override fun loadMore() {
-            viewAdapter.setData(null)
-            viewModel.getMoreMovies()
+            if (!isFiltering) {
+                viewAdapter.setData(null)
+                viewModel.getMoreMovies()
+            }
         }
     }
+
+    private var isFiltering = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +61,7 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
+        isFiltering = !newText.isNullOrEmpty()
         viewAdapter.filter(newText)
         return true
     }
@@ -89,5 +94,13 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
         intent.putExtra(AppConstants.EXTRA_TITLE, movie.title)
         intent.putExtra(AppConstants.EXTRA_ID, movie.id)
         startActivity(intent)
+    }
+
+    override fun showEmptyFilter() {
+        emptyFilterText.visibility = View.VISIBLE
+    }
+
+    override fun removeEmptyFilter() {
+        emptyFilterText.visibility = View.GONE
     }
 }
