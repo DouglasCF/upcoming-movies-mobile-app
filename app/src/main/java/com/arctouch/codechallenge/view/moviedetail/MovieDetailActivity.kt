@@ -22,6 +22,7 @@ class MovieDetailActivity : AppCompatActivity() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             title = intent.getStringExtra(AppConstants.EXTRA_TITLE)
+            elevation = 0f
         }
 
         val movieId = intent.getLongExtra(AppConstants.EXTRA_ID, 0)
