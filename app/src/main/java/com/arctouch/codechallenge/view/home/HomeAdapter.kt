@@ -1,4 +1,4 @@
-package com.arctouch.codechallenge.home
+package com.arctouch.codechallenge.view.home
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -22,14 +22,14 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<H
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(movie: Movie) {
-            itemView.titleTextView.text = movie.title
-            itemView.genresTextView.text = movie.genres?.joinToString(separator = ", ") { it.name }
+            itemView.titleText.text = movie.title
+            itemView.genresText.text = movie.genres?.joinToString(separator = ", ") { it.name }
             itemView.releaseDateTextView.text = movie.releaseDate
 
             Glide.with(itemView)
                     .load(movie.posterPath?.let { MovieImageUrlBuilder.buildPosterUrl(it) })
                     .apply(RequestOptions().placeholder(R.drawable.ic_image_placeholder))
-                    .into(itemView.posterImageView)
+                    .into(itemView.posterImage)
         }
     }
 

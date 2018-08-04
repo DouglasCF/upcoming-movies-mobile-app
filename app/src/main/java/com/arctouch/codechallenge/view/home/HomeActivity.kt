@@ -1,9 +1,11 @@
-package com.arctouch.codechallenge.home
+package com.arctouch.codechallenge.view.home
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.arctouch.codechallenge.R
 import com.arctouch.codechallenge.base.BaseActivity
@@ -33,6 +35,7 @@ class HomeActivity : BaseActivity(), HomeAdapter.OnHomeListener {
     private fun setupRecyclerView() {
         viewAdapter = HomeAdapter(this)
         recyclerView.apply {
+            addItemDecoration(DividerItemDecoration(this@HomeActivity, LinearLayoutManager.VERTICAL))
             adapter = viewAdapter
         }
     }

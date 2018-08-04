@@ -5,8 +5,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <import type="com.arctouch.codechallenge.util.MovieImageUrlBuilder" />
 
         <variable
@@ -20,8 +18,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            app:showVisible="@{movie != null}"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:showVisible="@{movie != null}">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -69,7 +67,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/genre"
                             android:textStyle="bold"
-                            android:visibility="@{movie.allGenre.length() > 0 ? View.VISIBLE : View.GONE}" />
+                            app:showVisible="@{movie.allGenre.length() > 0}" />
 
                         <TextView
                             android:id="@+id/genreText"
@@ -77,8 +75,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_margin"
                             android:text="@{movie.allGenre}"
-                            android:visibility="@{movie.allGenre.length() > 0 ? View.VISIBLE : View.GONE}"
                             app:layout_constraintTop_toBottomOf="@id/genreTitleText"
+                            app:showVisible="@{movie.allGenre.length() > 0}"
                             tools:text="Science Fiction | Thriller" />
 
                         <View
@@ -87,8 +85,8 @@
                             android:layout_height="1dp"
                             android:layout_marginTop="@dimen/default_margin"
                             android:background="#DDD"
-                            android:visibility="@{movie.allGenre.length() > 0 ? View.VISIBLE : View.GONE}"
-                            app:layout_constraintTop_toBottomOf="@id/genreText" />
+                            app:layout_constraintTop_toBottomOf="@id/genreText"
+                            app:showVisible="@{movie.allGenre.length() > 0}" />
 
                         <TextView
                             android:id="@+id/releaseDateTitleText"
