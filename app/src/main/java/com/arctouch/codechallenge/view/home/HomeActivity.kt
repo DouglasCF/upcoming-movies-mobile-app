@@ -4,11 +4,11 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.arctouch.codechallenge.R
-import com.arctouch.codechallenge.base.BaseActivity
 import com.arctouch.codechallenge.common.AppConstants
 import com.arctouch.codechallenge.model.Movie
 import com.arctouch.codechallenge.view.common.EndlessScrollListener
@@ -16,7 +16,7 @@ import com.arctouch.codechallenge.view.moviedetail.MovieDetailActivity
 import com.arctouch.codechallenge.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.home_activity.*
 
-class HomeActivity : BaseActivity(), HomeAdapter.OnHomeListener {
+class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var viewAdapter: HomeAdapter
