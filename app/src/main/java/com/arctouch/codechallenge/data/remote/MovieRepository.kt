@@ -12,42 +12,37 @@ import retrofit2.Response
 
 class MovieRepository : BaseRemoteRepository() {
 
+    private val cache = LinkedHashMap<Long, List<Movie>>()
+
     fun getMovies(page: Long): LiveData<List<Movie>> {
         val data = MutableLiveData<List<Movie>>()
 
-        api.upcomingMovies(TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE, page, TmdbApi.DEFAULT_REGION)
-                .enqueue(object : Callback<UpcomingMoviesResponse> {
-                    override fun onResponse(call: Call<UpcomingMoviesResponse>?, response: Response<UpcomingMoviesResponse>?) {
-                        if (response?.isSuccessful!!) {
-                            val movies = response.body()?.results?.map { movie ->
-                                movie.copy(genres = Cache.genres.filter { movie.genreIds?.contains(it.id) == true })
+        if (cache.containsKey(page)) {
+            data.value = getMoviesFromCache(page)
+        } else {
+            api.upcomingMovies(TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE, page, TmdbApi.DEFAULT_REGION)
+                    .enqueue(object : Callback<UpcomingMoviesResponse> {
+                        override fun onResponse(call: Call<UpcomingMoviesResponse>?, response: Response<UpcomingMoviesResponse>?) {
+                            if (response?.isSuccessful!!) {
+                                val results = response.body()?.results?.map { movie ->
+                                    movie.copy(genres = Cache.genres.filter { movie.genreIds?.contains(it.id) == true })
+                                }
+                                cache[page] = results!!
+                                data.value = getMoviesFromCache(page)
                             }
-                            data.value = movies
                         }
-                    }
 
-                    override fun onFailure(call: Call<UpcomingMoviesResponse>?, t: Throwable?) {
-                    }
-                })
+                        override fun onFailure(call: Call<UpcomingMoviesResponse>?, t: Throwable?) {
+                        }
+                    })
+        }
 
         return data
     }
 
-    fun getMovie(id: Long): LiveData<Movie> {
-        val data = MutableLiveData<Movie>()
-
-        api.movie(id, TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE)
-                .enqueue(object : Callback<Movie> {
-                    override fun onResponse(call: Call<Movie>?, response: Response<Movie>?) {
-                        if (response?.isSuccessful!!) {
-                            data.value = response.body()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<Movie>?, t: Throwable?) {
-                    }
-                })
-
-        return data
+    private fun getMoviesFromCache(page:Long) :List<Movie>{
+        val movies = mutableListOf<Movie>()
+        cache.filter { it.key <= page }.forEach { movies.addAll(it.value) }
+        return movies
     }
 }

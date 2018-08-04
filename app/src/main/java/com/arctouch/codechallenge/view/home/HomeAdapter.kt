@@ -55,17 +55,11 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<R
         }
     }
 
-    fun setData(data: List<Movie>) {
-        movies.clear()
-        movies.addAll(data)
-        notifyDataSetChanged()
-    }
-
-    fun addData(data: List<Movie>?) {
+    fun setData(data: List<Movie>?) {
         if (data == null) {
             movies.add(null)
         } else {
-            movies.remove(null)
+            movies.clear()
             movies.addAll(data)
         }
         notifyDataSetChanged()

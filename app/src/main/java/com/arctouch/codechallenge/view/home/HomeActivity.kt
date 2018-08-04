@@ -22,10 +22,8 @@ class HomeActivity : BaseActivity(), HomeAdapter.OnHomeListener {
     private lateinit var viewAdapter: HomeAdapter
     private val scrollListener = object : EndlessScrollListener() {
         override fun loadMore() {
-            viewAdapter.addData(null)
-            viewModel.getMovies().observe(this@HomeActivity, Observer {
-                viewAdapter.addData(it!!)
-            })
+            viewAdapter.setData(null)
+            viewModel.getMoreMovies()
         }
     }
 
