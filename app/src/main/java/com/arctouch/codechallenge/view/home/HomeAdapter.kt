@@ -20,6 +20,7 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<R
     }
 
     private val movies = mutableSetOf<Movie?>()
+    private val allMovies = mutableSetOf<Movie?>()
 
     class ViewHolder(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -61,6 +62,18 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<R
         } else {
             movies.clear()
             movies.addAll(data)
+        }
+        allMovies.clear()
+        allMovies.addAll(movies)
+        notifyDataSetChanged()
+    }
+
+    fun filter(newText: String?) {
+        movies.clear()
+        if (newText.isNullOrEmpty()) {
+            movies.addAll(allMovies)
+        } else {
+            movies.addAll(allMovies.filter { it?.title?.toLowerCase()?.contains(newText?.toLowerCase()!!)!! })
         }
         notifyDataSetChanged()
     }
