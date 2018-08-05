@@ -26,11 +26,22 @@ import kotlinx.android.synthetic.main.home_activity.*
 class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView.OnQueryTextListener,
         AdapterView.OnItemSelectedListener {
 
+    companion object {
+        private const val EXTRA_FILTER = "extra_filter"
+        private const val EXTRA_FILTER_GENRE = "extra_filter_genre"
+        private const val EXTRA_IS_FILTERING = "extra_is_filtering"
+    }
+
     private lateinit var viewModel: HomeViewModel
     private lateinit var viewAdapter: HomeAdapter
-    private lateinit var spinnerView: Spinner
+    private var spinnerView: Spinner? = null
+    private var filter: String? = null
+    private var filterGenre: String? = null
+    private var isFiltering = false
+    private var check = 0
     private val scrollListener = object : EndlessScrollListener() {
         override fun loadMore() {
+            // Do not load more movies while filtering since the bottom of the list is almost always visible
             if (!isFiltering) {
                 viewAdapter.setData(null)
                 viewModel.getMoreMovies()
@@ -38,14 +49,27 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
         }
     }
 
-    private var isFiltering = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.home_activity)
 
         setupRecyclerView()
         setupViewModel()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putString(EXTRA_FILTER, filter)
+        outState?.putString(EXTRA_FILTER_GENRE, filterGenre)
+        outState?.putBoolean(EXTRA_IS_FILTERING, isFiltering)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        isFiltering = savedInstanceState?.getBoolean(EXTRA_IS_FILTERING)!!
+        filter = savedInstanceState.getString(EXTRA_FILTER)
+        filterGenre = savedInstanceState.getString(EXTRA_FILTER_GENRE)
+        viewAdapter.filter(filter, filterGenre)
     }
 
     override fun onDestroy() {
@@ -58,11 +82,27 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
 
         val spinnerItem = menu?.findItem(R.id.action_spinner)
         spinnerView = spinnerItem?.actionView as Spinner
-        spinnerView.onItemSelectedListener = this
+        spinnerView?.onItemSelectedListener = this
 
         val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem?.actionView as SearchView
         searchView.setOnQueryTextListener(this)
+
+        // Let's set genres when rotate the device
+        if (Cache.genres.isNotEmpty()) {
+            setGenres(Cache.genres)
+        }
+
+        // Set the filter genre on spinner when rotate the device
+        if (filterGenre != null && filterGenre?.isNotEmpty()!!) {
+            val adapter = spinnerView?.adapter
+            for (i in 0 until adapter?.count!!) {
+                if ((adapter.getItem(i) as String) == filterGenre) {
+                    spinnerView?.setSelection(i)
+                    break
+                }
+            }
+        }
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -72,6 +112,7 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
+        filter = newText
         isFiltering = !newText.isNullOrEmpty()
         viewAdapter.filter(newText)
         return true
@@ -89,6 +130,7 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
     private fun setupViewModel() {
         viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         viewModel.getGenres().observe(this, Observer {
+            setGenres(Cache.genres)
             observeMovies()
         })
     }
@@ -101,28 +143,34 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
         val adapter = ArrayAdapter<String>(this, R.layout.item_genre_spinner, array)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        spinnerView.adapter = adapter
+        // SpinnerView is null here when rotate the device, let's add the adapter on onCreateOptionsMenu method
+        if (spinnerView != null) {
+            spinnerView?.adapter = adapter
+        }
     }
 
     private fun observeMovies() {
         viewModel.getMovies().observe(this, Observer {
             progressBar.visibility = View.GONE
             viewAdapter.setData(it!!)
-            setGenres(Cache.genres)
         })
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        var selectedItem = parent?.getItemAtPosition(position).toString()
-        if (selectedItem == getString(R.string.all_genres)) {
-            selectedItem = ""
-            isFiltering = false
-        } else {
-            isFiltering = true
+        // We don't want to filter nothing for the first time since it's 'All movies' option
+        if (++check > 1) {
+            var selectedItem = parent?.getItemAtPosition(position).toString()
+            if (selectedItem == getString(R.string.all_genres)) {
+                selectedItem = ""
+                isFiltering = false
+            } else {
+                isFiltering = true
+            }
+            filterGenre = selectedItem
+            viewAdapter.filterGenre(selectedItem)
         }
-        viewAdapter.filterGenre(selectedItem)
     }
 
     override fun onClick(movie: Movie) {
