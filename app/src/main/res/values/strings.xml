@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Code Challenge</string>
+    <string name="app_name">Upcoming movie</string>
 
     <string name="content_description_backdrop">Backdrop</string>
     <string name="content_description_poster">Poster</string>
