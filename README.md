@@ -23,5 +23,6 @@ The project was developed as follows:
 
 ## Screenshots
 <p align="center">
+  <img src="screenshots/movie_list.png" align="center" width=200>
   <img src="screenshots/movie_detail.png" align="center" width=200>
 </p>
