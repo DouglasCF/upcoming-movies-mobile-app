@@ -6,4 +6,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.NoElevation">
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
 </resources>
