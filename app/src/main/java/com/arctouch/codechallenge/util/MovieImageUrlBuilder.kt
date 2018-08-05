@@ -1,6 +1,6 @@
 package com.arctouch.codechallenge.util
 
-import com.arctouch.codechallenge.api.TmdbApi
+import com.arctouch.codechallenge.data.remote.BaseRemoteRepository
 
 object MovieImageUrlBuilder {
 
@@ -9,11 +9,11 @@ object MovieImageUrlBuilder {
 
     @JvmStatic
     fun buildPosterUrl(posterPath: String?): String {
-        return POSTER_URL + posterPath + "?api_key=" + TmdbApi.API_KEY
+        return POSTER_URL + posterPath + "?api_key=" + BaseRemoteRepository.API_KEY
     }
 
     @JvmStatic
     fun buildBackdropUrl(backdropPath: String?): String {
-        return BACKDROP_URL + backdropPath + "?api_key=" + TmdbApi.API_KEY
+        return BACKDROP_URL + backdropPath + "?api_key=" + BaseRemoteRepository.API_KEY
     }
 }

@@ -2,7 +2,7 @@ package com.arctouch.codechallenge.data.remote
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import com.arctouch.codechallenge.api.TmdbApi
+import com.arctouch.codechallenge.api.UpcomingMoviesApi
 import com.arctouch.codechallenge.data.Cache
 import com.arctouch.codechallenge.model.Movie
 import com.arctouch.codechallenge.model.UpcomingMoviesResponse
@@ -12,6 +12,8 @@ import retrofit2.Response
 
 class MovieRepository : BaseRemoteRepository() {
 
+    private val api = retrofit.create(UpcomingMoviesApi::class.java)
+
     private val cache = LinkedHashMap<Long, List<Movie>>()
 
     fun getMovies(page: Long): LiveData<List<Movie>> {
@@ -20,7 +22,7 @@ class MovieRepository : BaseRemoteRepository() {
         if (cache.containsKey(page)) {
             data.value = getMoviesFromCache(page)
         } else {
-            api.upcomingMovies(TmdbApi.API_KEY, TmdbApi.DEFAULT_LANGUAGE, page, TmdbApi.DEFAULT_REGION)
+            api.upcomingMovies(API_KEY, DEFAULT_LANGUAGE, page, DEFAULT_REGION)
                     .enqueue(object : Callback<UpcomingMoviesResponse> {
                         override fun onResponse(call: Call<UpcomingMoviesResponse>?, response: Response<UpcomingMoviesResponse>?) {
                             if (response?.isSuccessful!!) {
