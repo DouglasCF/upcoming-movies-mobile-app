@@ -104,6 +104,12 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
             }
         }
 
+        // Set the filter on search view when rotate the device
+        if (filter != null && filter?.isNotEmpty()!!) {
+            searchView.setQuery(filter, false)
+            searchView.isIconified = false
+        }
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -113,7 +119,7 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
 
     override fun onQueryTextChange(newText: String?): Boolean {
         filter = newText
-        isFiltering = !newText.isNullOrEmpty()
+        isFiltering = !filter.isNullOrEmpty() || !filterGenre.isNullOrEmpty()
         viewAdapter.filter(newText)
         return true
     }
@@ -164,11 +170,9 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
             var selectedItem = parent?.getItemAtPosition(position).toString()
             if (selectedItem == getString(R.string.all_genres)) {
                 selectedItem = ""
-                isFiltering = false
-            } else {
-                isFiltering = true
             }
             filterGenre = selectedItem
+            isFiltering = !filter.isNullOrEmpty() || !filterGenre.isNullOrEmpty()
             viewAdapter.filterGenre(selectedItem)
         }
     }

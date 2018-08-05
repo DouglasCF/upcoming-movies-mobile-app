@@ -84,6 +84,8 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<R
     }
 
     fun filter(filter: String?, genreFilter: String?) {
+        this.filter = filter
+        this.genreFilter = genreFilter
         movies.clear()
 
         if (genreFilter.isNullOrEmpty()) {
