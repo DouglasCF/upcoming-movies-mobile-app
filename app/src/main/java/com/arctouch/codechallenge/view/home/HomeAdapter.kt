@@ -24,6 +24,9 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<R
     private val movies = mutableSetOf<Movie?>()
     private val allMovies = mutableSetOf<Movie?>()
 
+    private var filter: String? = null
+    private var genreFilter: String? = null
+
     class ViewHolder(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movie: Movie, listener: OnHomeListener) {
@@ -71,11 +74,34 @@ class HomeAdapter(private val listener: OnHomeListener) : RecyclerView.Adapter<R
     }
 
     fun filter(newText: String?) {
+        filter = newText
+        filter(filter, genreFilter)
+    }
+
+    fun filterGenre(selectedItem: String) {
+        genreFilter = selectedItem
+        filter(filter, genreFilter)
+    }
+
+    private fun filter(filter: String?, genreFilter: String?) {
         movies.clear()
-        if (newText.isNullOrEmpty()) {
+
+        if (genreFilter.isNullOrEmpty()) {
             movies.addAll(allMovies)
         } else {
-            movies.addAll(allMovies.filter { it?.title?.toLowerCase()?.contains(newText?.toLowerCase()!!)!! })
+            allMovies.forEach {
+                val movie = it
+                it?.genres?.forEach {
+                    if (it.name == genreFilter) movies.add(movie)
+                }
+            }
+        }
+        if (!filter.isNullOrEmpty() && movies.any()) {
+            val tempList = mutableSetOf<Movie?>()
+            tempList.addAll(movies.filter { it?.title?.toLowerCase()?.contains(filter?.toLowerCase()!!)!! })
+
+            movies.clear()
+            movies.addAll(tempList)
         }
 
         if (movies.isEmpty()) {

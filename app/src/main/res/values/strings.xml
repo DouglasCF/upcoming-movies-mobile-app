@@ -9,4 +9,6 @@
     <string name="overview">Overview</string>
     <string name="search">Search</string>
     <string name="empty_filter_movie">No movie found</string>
+
+    <string name="all_genres">All genres</string>
 </resources>

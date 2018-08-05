@@ -10,18 +10,25 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import com.arctouch.codechallenge.R
 import com.arctouch.codechallenge.common.AppConstants
+import com.arctouch.codechallenge.data.Cache
+import com.arctouch.codechallenge.model.Genre
 import com.arctouch.codechallenge.model.Movie
 import com.arctouch.codechallenge.view.common.EndlessScrollListener
 import com.arctouch.codechallenge.view.moviedetail.MovieDetailActivity
 import com.arctouch.codechallenge.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.home_activity.*
 
-class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView.OnQueryTextListener {
+class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView.OnQueryTextListener,
+        AdapterView.OnItemSelectedListener {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var viewAdapter: HomeAdapter
+    private lateinit var spinnerView: Spinner
     private val scrollListener = object : EndlessScrollListener() {
         override fun loadMore() {
             if (!isFiltering) {
@@ -49,7 +56,11 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
 
-        val searchItem = menu?.findItem(R.id.action_search)
+        val spinnerItem = menu?.findItem(R.id.action_spinner)
+        spinnerView = spinnerItem?.actionView as Spinner
+        spinnerView.onItemSelectedListener = this
+
+        val searchItem = menu.findItem(R.id.action_search)
         val searchView = searchItem?.actionView as SearchView
         searchView.setOnQueryTextListener(this)
 
@@ -82,11 +93,36 @@ class HomeActivity : AppCompatActivity(), HomeAdapter.OnHomeListener, SearchView
         })
     }
 
+    private fun setGenres(genres: List<Genre>) {
+        val array = mutableListOf<String>()
+        array.add(getString(R.string.all_genres))
+        array.addAll(genres.map { it.name })
+
+        val adapter = ArrayAdapter<String>(this, R.layout.item_genre_spinner, array)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        spinnerView.adapter = adapter
+    }
+
     private fun observeMovies() {
         viewModel.getMovies().observe(this, Observer {
             progressBar.visibility = View.GONE
             viewAdapter.setData(it!!)
+            setGenres(Cache.genres)
         })
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        var selectedItem = parent?.getItemAtPosition(position).toString()
+        if (selectedItem == getString(R.string.all_genres)) {
+            selectedItem = ""
+            isFiltering = false
+        } else {
+            isFiltering = true
+        }
+        viewAdapter.filterGenre(selectedItem)
     }
 
     override fun onClick(movie: Movie) {
